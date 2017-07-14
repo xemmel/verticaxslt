@@ -172,4 +172,98 @@ sample xml:
 
 ```
 
+sample:
+
+```xml
+
+<Input xmlns="sourcenamespace" xmlns:stupid="stupid">
+  <id>40</id>
+  <name>Morten</name>
+  <address type="private">
+    <street>GoStreet</street>
+    <number>50</number>
+  </address>
+  <address type="work">
+    <street>GogStreet</street>
+    <number>500</number>
+  </address>
+</Input>
+
+```
+
+
+## Re-ordering
+
+
+```xml
+
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+ <!-- Make key array thing!!-->
+  <xsl:key name="records-by-artist" match="Record" use="Artist" />
+  <xsl:template match="Records">
+    <Artists>
+      <!--Resembles DISTINCT only going to give you each artist once!!!-->
+      <xsl:for-each select="Record[count(. | key('records-by-artist',Artist)[1]) = 1]">
+        <xsl:sort select="Artist"/>
+        <Artist>
+          <Name>
+            <xsl:value-of select="Artist"/>
+          </Name>
+          <Albums>
+            <!--Each Record for the given Artist-->
+            <xsl:for-each select="key('records-by-artist',Artist)">
+              <Album>
+                <Title>
+                  <xsl:value-of select="Title"/>
+                </Title>
+              </Album>
+            </xsl:for-each>
+          </Albums>
+        </Artist>
+      </xsl:for-each>
+
+    </Artists>
+  </xsl:template>
+</xsl:stylesheet>
+
+```
+
+sample xml:
+
+```xml
+
+<Records>
+  <Record>
+    <Title>Please Please Me</Title>
+    <Artist>Beatles</Artist>
+  </Record>
+  <Record>
+    <Title>Help</Title>
+    <Artist>Beatles</Artist>
+  </Record>
+  <Record>
+    <Title>Purple Rain</Title>
+    <Artist>Prince</Artist>
+  </Record>
+  <Record>
+    <Title>Rubber Soul</Title>
+    <Artist>Beatles</Artist>
+  </Record>
+  <Record>
+    <Title>The Wall</Title>
+    <Artist>Pink Floyd</Artist>
+  </Record>
+  <Record>
+    <Title>Back In Black</Title>
+    <Artist>AC/DC</Artist>
+  </Record>
+  <Record>
+    <Title>Wish You were here</Title>
+    <Artist>Pink Floyd</Artist>
+  </Record>
+</Records>
+
+
+```
+
 
